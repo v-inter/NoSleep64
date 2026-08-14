@@ -1,5 +1,5 @@
-;format PE64 CONSOLE 5.0 ; Формат для 64-битных систем (для отладки)
-format PE64 GUI 5.0 ; Меняем на GUI, чтобы программа запускалась без окон
+;format PE64 CONSOLE 5.0 ; Р¤РѕСЂРјР°С‚ РґР»СЏ 64-Р±РёС‚РЅС‹С… СЃРёСЃС‚РµРј (РґР»СЏ РѕС‚Р»Р°РґРєРё)
+format PE64 GUI 5.0 ; РњРµРЅСЏРµРј РЅР° GUI, С‡С‚РѕР±С‹ РїСЂРѕРіСЂР°РјРјР° Р·Р°РїСѓСЃРєР°Р»Р°СЃСЊ Р±РµР· РѕРєРѕРЅ
 entry start
 
 include 'win64a.inc'
@@ -7,25 +7,25 @@ include 'win64a.inc'
 section '.code' code readable executable
 
 start:
-;    ; Константы для SetThreadExecutionState
+;    ; РљРѕРЅСЃС‚Р°РЅС‚С‹ РґР»СЏ SetThreadExecutionState
 ;    ES_CONTINUOUS       = 80000000h
 ;    ES_SYSTEM_REQUIRED  = 00000001h
 ;    ES_DISPLAY_REQUIRED = 00000002h
 ;
-;    ; Итоговая маска флагов: непрерывно держать включенными систему и дисплей
+;    ; РС‚РѕРіРѕРІР°СЏ РјР°СЃРєР° С„Р»Р°РіРѕРІ: РЅРµРїСЂРµСЂС‹РІРЅРѕ РґРµСЂР¶Р°С‚СЊ РІРєР»СЋС‡РµРЅРЅС‹РјРё СЃРёСЃС‚РµРјСѓ Рё РґРёСЃРїР»РµР№
 ;    EXEC_STATE_FLAGS    = ES_CONTINUOUS + ES_SYSTEM_REQUIRED + ES_DISPLAY_REQUIRED
-    ; Передаем флаги в RCX (ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED)
-    mov     rcx, 80000003h  ; Собранный флаг (ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED)
-    sub     rsp, 32         ; Резервируем теневой стек (Shadow space)
+    ; РџРµСЂРµРґР°РµРј С„Р»Р°РіРё РІ RCX (ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED)
+    mov     rcx, 80000003h  ; РЎРѕР±СЂР°РЅРЅС‹Р№ С„Р»Р°Рі (ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED)
+    sub     rsp, 32         ; Р РµР·РµСЂРІРёСЂСѓРµРј С‚РµРЅРµРІРѕР№ СЃС‚РµРє (Shadow space)
     call    [SetThreadExecutionState]
-    add     rsp, 32         ; Восстанавливаем стек
+    add     rsp, 32         ; Р’РѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЃС‚РµРє
     
-    ; Если функция вернула 0 (ошибка), просто тихо завершаем работу
+    ; Р•СЃР»Рё С„СѓРЅРєС†РёСЏ РІРµСЂРЅСѓР»Р° 0 (РѕС€РёР±РєР°), РїСЂРѕСЃС‚Рѕ С‚РёС…Рѕ Р·Р°РІРµСЂС€Р°РµРј СЂР°Р±РѕС‚Сѓ
     test    rax, rax
     jz      exit
 
 main_loop:
-    ; Бесконечный цикл с засыпанием на 60 секунд (0% нагрузки на CPU)
+    ; Р‘РµСЃРєРѕРЅРµС‡РЅС‹Р№ С†РёРєР» СЃ Р·Р°СЃС‹РїР°РЅРёРµРј РЅР° 60 СЃРµРєСѓРЅРґ (0% РЅР°РіСЂСѓР·РєРё РЅР° CPU)
     mov     rcx, 60000
     sub     rsp, 32
     call    [Sleep]
@@ -33,12 +33,12 @@ main_loop:
     jmp     main_loop
 
 exit:
-    ; Если произошла ошибка, получаем её код и выходим
+    ; Р•СЃР»Рё РїСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР°, РїРѕР»СѓС‡Р°РµРј РµС‘ РєРѕРґ Рё РІС‹С…РѕРґРёРј
     mov     rcx, 0
     sub     rsp, 32
     call    [ExitProcess]
 
-; Секция импорта функций
+; РЎРµРєС†РёСЏ РёРјРїРѕСЂС‚Р° С„СѓРЅРєС†РёР№
 section '.idata' import data readable writeable
 
     library kernel32, 'kernel32.dll'
