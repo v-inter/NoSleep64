@@ -47,4 +47,3 @@ section '.idata' import data readable writeable
            SetThreadExecutionState, 'SetThreadExecutionState', \
            Sleep, 'Sleep', \
            ExitProcess, 'ExitProcess'
-
